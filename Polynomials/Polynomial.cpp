@@ -2,12 +2,20 @@
 #include <list>  // Type: std::list - std::vector<double>
 
 #include "Polynomial.h"
-#include <iostream>
+// #include <iostream> // For debugging
 
 using namespace std;
 
 const vector<double> Polynomial::nullVec = {0};
-const Polynomial Polynomial::nullPoly(nullVec);
+const Polynomial Polynomial::nullPoly(Polynomial::nullVec);
+const vector<double> Polynomial::unitVec = {1};
+const Polynomial Polynomial::unitPoly(Polynomial::unitVec);
+
+Polynomial::Polynomial ()
+{
+	Polynomial::coefficients = Polynomial::unitVec;
+	Polynomial::degree = 0;
+}
 
 Polynomial::Polynomial (const double* coef)
 {
@@ -84,7 +92,7 @@ vector<double> Polynomial::addVec (vector<double> vec1, vector<double> vec2)  //
 
 vector<double> Polynomial::multiplyScalarVec (vector<double> vec, double scalar)  // defaults to -1 (acts as flip())
 {
-	if (!scalar) return Polynomial::nullVec;  // Case: scalar == 0
+	if (!scalar) return Polynomial::nullVec;  // Case: scalar == 0 (or scalar = Null?)
 	for (vector<double>::iterator i = vec.begin(); i != vec.end(); ++i) {
 		*i *= scalar;
 	}
@@ -116,19 +124,25 @@ bool Polynomial::equals (const Polynomial& poly) const
 
 Polynomial& Polynomial::add (const Polynomial& poly)
 {
-	setCoefficients(addVec(coefficients, poly.getCoefficients()));
+	setCoefficients(addVec(Polynomial::coefficients, poly.getCoefficients()));
 	return *this;
 }
 
 Polynomial& Polynomial::subtract (const Polynomial& poly)
 {
-	setCoefficients(subtractVec(coefficients, poly.getCoefficients()));
+	setCoefficients(subtractVec(Polynomial::coefficients, poly.getCoefficients()));
 	return *this;
 }
 
 Polynomial& Polynomial::multiply (const Polynomial& poly)
 {
-	setCoefficients(productVec(coefficients, poly.getCoefficients()));
+	setCoefficients(productVec(Polynomial::coefficients, poly.getCoefficients()));
+	return *this;
+}
+
+Polynomial& Polynomial::scalarMultiply (const double k)
+{
+	setCoefficients(multiplyScalarVec(Polynomial::coefficients, k));
 	return *this;
 }
 
@@ -136,8 +150,7 @@ Polynomial& Polynomial::multiply (const Polynomial& poly)
 
 double Polynomial::intPow (double x, int n) //(Private) Optimized, should be a bit faster than std::pow(double, int)
 {
-	assert (n >= 0);  // prevent negative powers
-	if (n == 0) return 1;
+	if (n <= 0) return (n == 0) ? 1 : (1 / Polynomial::intPow(x, n));
 	double y = x;
 	for (int i = n-1; i--;){
 		y *= x;

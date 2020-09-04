@@ -9,7 +9,7 @@ class Polynomial
 	private:
 		std::vector<double> coefficients;
 		int degree;
-		static double intPow (double x, int n);  // Optimized for integer powers only
+		
 		static int factorialBetween (int b, int a = 0);  // Special Factorial b!/a!
 		static std::vector<double> arrayToVec(double* arr);  // For converting double* to std::vector<double>
 		static std::vector<double> truncateVec(std::vector<double> vec);  // Truncate leading zeros (for optimizaiton and comparison)
@@ -20,8 +20,12 @@ class Polynomial
 		//static std::vector<double> productVec (std::vector<double> vec1, std::vector<double> vec2);  // Multiplies vectors in the "coefficient" style
 
 		static const std::vector<double> nullVec;  // The standard (smallest) null/emtpy vector
-		static const Polynomial nullPoly;  // The standard (smallest) null/empty polynomial
+		static const Polynomial nullPoly;  // The standard (smallest) null/empty polynomial. Note: Nullpoly also has degree 0.
+		static const std::vector<double> unitVec;
+		static const Polynomial unitPoly;  // Unit polynomial has degree 0 and is a multiplicative identity.
+
 	public:
+		Polynomial ();  // No specification result in a unit polynomial (to prevent undefined errors)
 		Polynomial (const double* coef);
 		Polynomial (std::vector<double> coef);
 		~Polynomial ();
@@ -35,6 +39,7 @@ class Polynomial
 		Polynomial& add (const Polynomial& poly);
 		Polynomial& subtract (const Polynomial& poly);
 		Polynomial& multiply (const Polynomial& poly);
+		Polynomial& scalarMultiply (const double k);
 
 		bool isNull () const { return coefficients == nullVec; }  // In case this is useful
 
@@ -45,9 +50,11 @@ class Polynomial
 		Polynomial operator + ( const Polynomial& poly ) const { return Polynomial(addVec(coefficients, poly.getCoefficients())); }  // Binary (+)
 		Polynomial operator - ( const Polynomial& poly ) const { return Polynomial(subtractVec(coefficients, poly.getCoefficients())); }  // Binary (-)
 		Polynomial operator * ( const Polynomial& poly ) const { return Polynomial(productVec(coefficients, poly.getCoefficients())); }  // Binary (*)
+		Polynomial operator * ( const double k ) const { return Polynomial(multiplyScalarVec(coefficients, k)); }  // Binary (*) Scalar
 		Polynomial& operator += ( const Polynomial& poly ) { return add(poly); }  // Assignment (+=)
 		Polynomial& operator -= ( const Polynomial& poly ) { return subtract(poly); }  // Assignment (-=)
 		Polynomial& operator *= ( const Polynomial& poly ) { return multiply(poly); }  // Assignment (*=)
+		Polynomial& operator *= ( const double k ) { return scalarMultiply(k); }  // Assignment (*=)
 
 		// Calculations
 		double evaluate (double x);

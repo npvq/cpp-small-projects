@@ -86,17 +86,16 @@ int Primes::pi (const long n)
 
 	list<long> primes;
 	primes.push_back(2);
+	bool currentprime = true;
 	for (long p = 3; p <= n; ++p) {
-		bool current_prime = true;
-		for (list<long>::iterator i = primes.begin(); i != primes.end(); ++i) {
-			if ((*i)*(*i) > p) {
-				break;
-			} else if (p % *i == 0) {
-				current_prime = false;
+		currentprime = true;
+		for (list<long>::iterator i = primes.begin(); i != primes.end() && (*i)*(*i) <= p; ++i) {
+			if (p % *i == 0) {
+				currentprime = false;
 				break;
 			}
 		}
-		if (current_prime) {
+		if (currentprime) {
 			primes.push_back(p);
 		}
 	}
@@ -110,23 +109,19 @@ int Primes::piEfficient (const long n)
 	}
 
 	list<long> primes;
-	for (list<int>::const_iterator i = Primes::lowPrimes.begin(); i != Primes::lowPrimes.end(); ++i) {
-		if (*i > n) {
-			break;
-		}
+	for (list<int>::const_iterator i = Primes::lowPrimes.begin(); i != Primes::lowPrimes.end() && *i <= n; ++i) {
 		primes.push_back(*i);
 	}
+	bool currentprime = true;
 	for (long p = Primes::lowPrimesNext; p <= n; ++p) {
-		bool current_prime = true;
-		for (list<long>::iterator i = primes.begin(); i != primes.end(); ++i) {
-			if ((*i)*(*i) > p) {
-				break;
-			} else if (p % *i == 0) {
-				current_prime = false;
+		currentprime = true;
+		for (list<long>::iterator i = primes.begin(); i != primes.end() && (*i)*(*i) <= p; ++i) {
+			if (p % *i == 0) {
+				currentprime = false;
 				break;
 			}
 		}
-		if (current_prime) {
+		if (currentprime) {
 			primes.push_back(p);
 		}
 	}

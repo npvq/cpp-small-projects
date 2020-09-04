@@ -13,10 +13,18 @@ void printVec(vector<double> vec) {
 }
 
 int main () {
-	Polynomial x({1, 3, 3, 1});
+	// TODO: Write a good test file.
+
+	Polynomial x({1, 0, 3});
 	printVec(x.getCoefficients());
 
-	Polynomial y({0, 0});
+	Polynomial y({2, 1});
+
+	Polynomial z = x * 3;
+	x *= y;
+	printVec(x.getCoefficients());
+	printVec(y.getCoefficients());
+	printVec(z.getCoefficients());
 
 	cout << "xnull " << x.isNull() << ", ynull " << y.isNull() << endl;
 

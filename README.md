@@ -5,5 +5,8 @@ Some small projects in C++
 
 Name|Status
 :--|:-:
+Complex Numbers|Sort of Finished
 Polynomial|Sort of Finished
 Prime Numbers|Finished
+
+_C++ Version: `c++14`_
